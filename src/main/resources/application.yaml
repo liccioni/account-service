@@ -18,6 +18,8 @@ spring:
     name: account-service
   jpa:
     open-in-view: false
+  flyway:
+    enabled: false
 management:
   endpoints:
     web:
