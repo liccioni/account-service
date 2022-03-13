@@ -1,0 +1,31 @@
+spring:
+  cloud:
+    function:
+      definition: orderEventListener
+    stream:
+      bindings:
+        orderEventListener-in-0:
+          destination: orders.topic
+          group: account-service-consumer
+        orderEventListener-out-0:
+          destination: orders.topic
+        orders-event-output:
+          destination: orders.topic
+  data:
+    rest:
+      basePath: /api
+  application:
+    name: account-service
+  jpa:
+    open-in-view: false
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+      probes:
+        enabled: true
+
