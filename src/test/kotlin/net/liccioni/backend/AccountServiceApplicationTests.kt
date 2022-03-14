@@ -1,10 +1,13 @@
 package net.liccioni.backend
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.cloud.stream.test.binder.TestSupportBinder
 import org.springframework.http.MediaType
 import org.springframework.test.context.DynamicPropertyRegistry
 import org.springframework.test.context.DynamicPropertySource
@@ -28,6 +31,9 @@ class AccountServiceApplicationTests {
     @Autowired
     lateinit var objectMapper: ObjectMapper
 
+    @Autowired
+    lateinit var testSupportBinder: TestSupportBinder
+
     companion object {
         @Container
         private val mysqlContainer = MySQLContainer("mysql:8.0.22")
@@ -45,7 +51,7 @@ class AccountServiceApplicationTests {
             registry.add("spring.datasource.url", mysqlContainer::getJdbcUrl)
             registry.add("spring.datasource.password", mysqlContainer::getPassword)
             registry.add("spring.datasource.username", mysqlContainer::getUsername)
-            registry.add("spring.jpa.hibernate.ddl-auto") { "create-drop" }
+            registry.add("spring.jpa.hibernate.ddl-auto") { "update" }
 
             registry.add("spring.rabbitmq.host", rabbitContainer::getContainerIpAddress)
             registry.add("spring.rabbitmq.port") { rabbitContainer.getMappedPort(5672) }
@@ -54,7 +60,8 @@ class AccountServiceApplicationTests {
 
     @Test
     fun `should create a todo item`() {
-        val json = objectMapper.writeValueAsString(TodoRequest("Write a blog on Testcontainers"))
+        val task = "Write a blog on Testcontainers"
+        val json = objectMapper.writeValueAsString(TodoRequest(task))
         this.mockMvc.perform(
             post("/api/todos")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -62,6 +69,11 @@ class AccountServiceApplicationTests {
         )
             .andDo(print())
             .andExpect(status().isCreated)
+
+        val payload = testSupportBinder.messageCollector()
+            .forChannel(testSupportBinder.getChannelForName("orders.topic")).poll().payload as String
+        val actual = objectMapper.readValue<Todo>(payload)
+        assertThat(actual.task).isEqualTo(task)
     }
 
 }

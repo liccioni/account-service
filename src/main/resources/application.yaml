@@ -7,8 +7,6 @@ spring:
         orderEventListener-in-0:
           destination: orders.topic
           group: account-service-consumer
-        orderEventListener-out-0:
-          destination: orders.topic
         orders-event-output:
           destination: orders.topic
   data:
