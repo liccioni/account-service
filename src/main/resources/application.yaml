@@ -1,14 +1,14 @@
 spring:
   cloud:
     function:
-      definition: orderEventListener
+      definition: personEventListener
     stream:
       bindings:
-        orderEventListener-in-0:
-          destination: orders.topic
+        personEventListener-in-0:
+          destination: persons.topic
           group: account-service-consumer
-        orders-event-output:
-          destination: orders.topic
+        persons-event-output:
+          destination: persons.topic
   data:
     rest:
       basePath: /api

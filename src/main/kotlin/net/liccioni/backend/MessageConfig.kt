@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration
 class MessageConfig {
 
     @Bean
-    fun orderEventListener(): (Todo) -> Unit {
+    fun personEventListener(): (BaseEntity) -> Unit {
         return { it -> println(it) }
     }
 }

@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.cloud.stream.test.binder.TestSupportBinder
 import org.springframework.http.MediaType
 import org.springframework.test.context.DynamicPropertyRegistry
@@ -34,10 +36,13 @@ class AccountServiceApplicationTests {
     @Autowired
     lateinit var testSupportBinder: TestSupportBinder
 
+    @MockBean
+    lateinit var idGenerator: IdGenerator
+
     companion object {
         @Container
         private val mysqlContainer = MySQLContainer("mysql:8.0.22")
-            .withDatabaseName("myapp")
+                .withDatabaseName("myapp")
 
         @Container
         private val rabbitContainer = RabbitMQContainer("rabbitmq:3.9-alpine")
@@ -60,20 +65,21 @@ class AccountServiceApplicationTests {
 
     @Test
     fun `should create a todo item`() {
-        val task = "Write a blog on Testcontainers"
-        val json = objectMapper.writeValueAsString(TodoRequest(task))
+        val identifier = "firstId"
+        `when`(idGenerator.generate()).thenReturn(identifier)
+
+        val json = objectMapper.writeValueAsString(Person(identifier))
         this.mockMvc.perform(
-            post("/api/todos")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json)
-        )
-            .andDo(print())
-            .andExpect(status().isCreated)
+                post("/api/persons")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andDo(print())
+                .andExpect(status().isCreated)
 
         val payload = testSupportBinder.messageCollector()
-            .forChannel(testSupportBinder.getChannelForName("orders.topic")).poll().payload as String
-        val actual = objectMapper.readValue<Todo>(payload)
-        assertThat(actual.task).isEqualTo(task)
+                .forChannel(testSupportBinder.getChannelForName("persons.topic")).poll().payload as String
+        val actual = objectMapper.readValue<Person>(payload)
+        assertThat(actual.identifier).isEqualTo(identifier)
     }
 
 }
