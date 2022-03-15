@@ -95,5 +95,5 @@ postgresql:
     username: "account-service"
     database: "account-service"
   primary:
-    persitence:
-      size: 500Mb
+    persistence:
+      size: 500Mi
