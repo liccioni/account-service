@@ -1,4 +1,12 @@
 spring:
+  rabbitmq:
+    username: ${RABBIT_USERNAME}
+    password: ${RABBIT_PASSWORD}
+    host: ${RABBIT_HOST}
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
   cloud:
     function:
       definition: personEventListener

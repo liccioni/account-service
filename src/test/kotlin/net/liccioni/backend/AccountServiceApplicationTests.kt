@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import org.testcontainers.containers.MySQLContainer
+import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.containers.RabbitMQContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
@@ -41,7 +41,7 @@ class AccountServiceApplicationTests {
 
     companion object {
         @Container
-        private val mysqlContainer = MySQLContainer("mysql:8.0.22")
+        private val postgresContainer = PostgreSQLContainer("postgres:9.6.12")
                 .withDatabaseName("myapp")
 
         @Container
@@ -53,9 +53,9 @@ class AccountServiceApplicationTests {
 
             registry.add("spring.jpa.show-sql") { true }
             registry.add("spring.jpa.properties.hibernate.format_sql") { true }
-            registry.add("spring.datasource.url", mysqlContainer::getJdbcUrl)
-            registry.add("spring.datasource.password", mysqlContainer::getPassword)
-            registry.add("spring.datasource.username", mysqlContainer::getUsername)
+            registry.add("spring.datasource.url", postgresContainer::getJdbcUrl)
+            registry.add("spring.datasource.password", postgresContainer::getPassword)
+            registry.add("spring.datasource.username", postgresContainer::getUsername)
             registry.add("spring.jpa.hibernate.ddl-auto") { "update" }
 
             registry.add("spring.rabbitmq.host", rabbitContainer::getContainerIpAddress)
