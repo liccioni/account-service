@@ -94,3 +94,6 @@ postgresql:
   auth:
     username: "account-service"
     database: "account-service"
+  primary:
+    persitence:
+      size: 500Mb
