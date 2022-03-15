@@ -78,12 +78,19 @@ tolerations: []
 
 affinity: {}
 
+rabbitmq:
+  host: "rabbitmq-headless"
+  username: "okteto"
+  secret:
+    name: "rabbitmq"
+    key: "rabbitmq-password"
+
 postgresql:
   enabled: true
   url: "jdbc:postgresql://account-service-postgresql-hl:5432/account-service"
   secret:
     name: "account-service-postgresql"
-    key: "postgres-password"
+    key: "password"
   auth:
     username: "account-service"
     database: "account-service"

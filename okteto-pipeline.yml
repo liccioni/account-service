@@ -1,0 +1,2 @@
+deploy:
+  - helm upgrade --install account-service chart --set image.tag=${APP_VERSION}

@@ -43,15 +43,15 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.postgresql.secret.name }}
                   key: {{ .Values.postgresql.secret.key }}
-#            - name: "RABBIT_HOST"
-#              value: "rabbitmq-headless"
-#            - name: "RABBIT_USERNAME"
-#              value: "admin"
-#            - name: "RABBIT_PASSWORD"
-#              valueFrom:
-#                secretKeyRef:
-#                  name: rabbitmq
-#                  key: rabbitmq-password
+            - name: "RABBIT_HOST"
+              value: {{ .Values.rabbitmq.host }}
+            - name: "RABBIT_USERNAME"
+              value: {{ .Values.rabbitmq.username }}
+            - name: "RABBIT_PASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.rabbitmq.secret.name }}
+                  key: {{ .Values.rabbitmq.secret.key }}
           ports:
             - name: http
               containerPort: 8080
