@@ -19,7 +19,7 @@ spring:
           destination: persons.topic
   data:
     rest:
-      basePath: /api
+      basePath: /api/account
   application:
     name: account-service
   jpa:

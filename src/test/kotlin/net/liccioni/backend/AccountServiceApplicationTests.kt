@@ -71,7 +71,7 @@ class AccountServiceApplicationTests {
 
         val json = objectMapper.writeValueAsString(Person(identifier))
         this.mockMvc.perform(
-                post("/api/persons")
+                post("/api/account/persons")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andDo(print())
