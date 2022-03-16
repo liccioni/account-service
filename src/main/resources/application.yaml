@@ -24,8 +24,8 @@ spring:
     name: account-service
   jpa:
     open-in-view: false
-  flyway:
-    enabled: false
+    hibernate:
+      ddl-auto: validate
 management:
   endpoints:
     web:

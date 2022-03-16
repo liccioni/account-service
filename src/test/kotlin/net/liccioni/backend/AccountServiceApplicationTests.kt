@@ -41,8 +41,8 @@ class AccountServiceApplicationTests {
 
     companion object {
         @Container
-        private val postgresContainer = PostgreSQLContainer("postgres:9.6.12")
-                .withDatabaseName("myapp")
+        private val postgresContainer = PostgreSQLContainer("postgres:14.2-alpine")
+                .withDatabaseName("account-db")
 
         @Container
         private val rabbitContainer = RabbitMQContainer("rabbitmq:3.9-alpine")
@@ -51,6 +51,7 @@ class AccountServiceApplicationTests {
         @DynamicPropertySource
         fun properties(registry: DynamicPropertyRegistry) {
 
+//            registry.add("spring.flyway.enabled") { false }
             registry.add("spring.jpa.show-sql") { true }
             registry.add("spring.jpa.properties.hibernate.format_sql") { true }
             registry.add("spring.datasource.url", postgresContainer::getJdbcUrl)
